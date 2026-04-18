@@ -85,14 +85,14 @@ const ProductCard = forwardRef(function ProductCard({
     if (!dayImage && !nightImage) {
       return (
         <Box
-          sx={ {
+          sx={{
             width: '100%',
             height: '100%',
             backgroundColor: 'grey.200',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-          } }
+          }}
         >
           <Typography variant="caption" color="text.secondary">
             No image
@@ -110,13 +110,13 @@ const ProductCard = forwardRef(function ProductCard({
         }}
       >
         <TimeBlendImage
-          dayImage={ dayImage }
-          nightImage={ nightImage }
-          timeline={ timeline }
-          alt={ title }
+          dayImage={dayImage}
+          nightImage={nightImage}
+          timeline={timeline}
+          alt={title}
           aspectRatio="3/4"
           objectFit="cover"
-          sx={ { width: '100%', height: '100%' } }
+          sx={{ width: '100%', height: '100%' }}
         />
       </Box>
     );
@@ -124,18 +124,18 @@ const ProductCard = forwardRef(function ProductCard({
 
   return (
     <CustomCard
-      ref={ ref }
+      ref={ref}
       layout="vertical"
       mediaRatio="auto"
-      mediaSlot={ renderMediaSlot() }
+      mediaSlot={renderMediaSlot()}
       gap="sm"
       contentPadding="none"
       variant="ghost"
       isInteractive
-      onClick={ shared.onClick }
-      hoverMediaScale={ hoverMediaScale }
-      sx={ sx }
-      { ...props }
+      onClick={shared.onClick}
+      hoverMediaScale={hoverMediaScale}
+      sx={sx}
+      {...props}
     >
       {/* 타입 태그 */}
       <Box sx={{ display: 'flex', gap: 0.5 }}>
