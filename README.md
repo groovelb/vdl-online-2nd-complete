@@ -117,3 +117,79 @@ pnpm add -D prettier
 | `pnpm build-storybook` | Storybook 정적 빌드 |
 | `pnpm lint` | ESLint 실행 |
 | `pnpm generate-rules` | `.claude/` 구조를 스캔하여 룰 시각화 데이터 재생성 |
+
+## Lumenstate 완성본 레시피 — 데이터 모델 × 컴포넌트
+
+이 스타터킷으로 만든 완성본(Lumenstate 조명 쇼케이스)이 **이미지 생성 → 데이터 모델 → 컴포넌트**로 어떻게 조립되는지에 대한 레시피입니다.
+
+### 전체 파이프라인
+
+```
+[1] 이미지 생성 ({id}.png=Day, {id}-1.png=Night, id=1..20)
+      │
+      ▼
+[2] src/assets/product/index.js
+      productAssets[id] = { images: [Day, Night] }
+      │
+      ▼
+[3] src/data/products.js  (데이터 모델)
+      product = { id, title, description, type, mounting*, form*, lightPattern*, lux, kelvin, images }
+      + PRODUCT_OPTIONS{glassFinish,hardware,height} · PRODUCT_TYPES · MOUNTING_TYPES
+      │
+      ├─► ProductFilter ─ PRODUCT_TYPES → 필터 탭
+      ▼
+[4] ProductShowcase → ProductGallery → ProductGrid → ProductCard
+      │  onClick → navigate(`/product/${id}`)
+      ▼
+[5] ProductDetailRoute(price·meta 주입) → ProductDetailTemplate
+      ├ ProductHeroTemplate   (title, description, type, lux, kelvin)
+      ├ ProductImageViewer    (id, images, title, lux, kelvin)
+      └ ProductInfoTemplate   (price, currency, options, quantity, meta)
+      │  addItem(product, options, quantity)
+      ▼
+[6] CartContext → CartDrawer → CartItem  (images[0], title, price, options)
+```
+
+### 이미지 생성 — 두 가지 경로
+
+완성본의 제품 이미지는 아래 두 경로로 만든다. 프롬프트 명세는 `docs/lumenstate/image-generation/`에 있다.
+
+| 경로 | 도구 | 방법 |
+|------|------|------|
+| **자동 배치 생성** | `scripts/generate-product-images.mjs` | Gemini 이미지 모델(`gemini-3.1-flash-image-preview`) API 호출. Day는 텍스트→이미지, Night는 **Day 이미지를 레퍼런스로 한 이미지→이미지 변환**. #1~20을 한 번에 생성 |
+| **에이전트가 직접 생성** | codex / Claude 등 | `docs/lumenstate/image-generation/prompt-template.md`(+ `product-specs.md`, `common-style.md`)를 참고해 프롬프트를 조립해 생성 |
+
+- **SSOT는 스크립트다.** `prompt-template.md`/`product-specs.md`는 스크립트의 `build*Prompt()`·`PRODUCTS`와 동기화된 문서다. codex에서 직접 만들 땐 이 템플릿을 활용하되, 최종 기준은 스크립트다.
+- 스크립트 실행 예: `node scripts/generate-product-images.mjs --ids 16,17 --mode day`
+  (별도 npm 스크립트로 등록돼 있지 않음. 실행하려면 `@google/genai`·`dotenv` 설치와 환경변수 `GEMINI_API_KEY` 필요.)
+- 산출물은 `src/assets/product/{id}.png`(Day) / `{id}-1.png`(Night)로 저장 → `index.js`가 `productAssets`로 묶는다.
+
+### 데이터 모델 (`src/data/products.js`)
+
+| 필드 | 용도 | 소비처 |
+|------|------|--------|
+| `id` | 라우팅·Shared Element·cart 식별 **(연결 키)** | 전 경로 |
+| `type` | 필터·아이콘·타입 태그 **(연결 키)** | ProductFilter, useFilterTransition, ProductCard, HeroTemplate |
+| `title` | 제품명·이미지 alt | Card, Hero, Viewer, CartItem |
+| `description` | 본문 설명 | **ProductHeroTemplate에서만** |
+| `lux`, `kelvin` | 스펙 표시 전용 (`{lux} lx · {kelvin} K`) | Card, Hero, Viewer |
+| `images` | `[Day, Night]` — 목록/상세는 `TimeBlendImage`로 블렌딩, 장바구니는 `images[0]` 1장 | Card, Viewer, CartItem |
+| `mounting`, `form`, `lightPattern` | **이미지 생성 명세용 메타** — UI에서는 미사용 | (없음) |
+
+- `PRODUCT_OPTIONS`(glassFinish/hardware/height) → 상세 옵션 선택 UI + 장바구니 옵션 라벨 매핑
+- `price`/`currency`는 모델에 **없고** `ProductDetailRoute`에서 런타임 주입(`price: 1290`), cart는 `product.price || 0`로 폴백
+
+> **핵심 통찰**: `products.js`의 `form`·`lightPattern`·`mounting`은 화면에는 쓰이지 않는다. 이 세 필드가 곧 **이미지 생성 레시피**(스크립트 `PRODUCTS`·`product-specs.md`와 일치)이고, 화면에 실제로 쓰이는 건 `id`·`type`·`title`·`description`·`lux`·`kelvin`·`images`다. 즉 하나의 데이터 모델이 "이미지 생성 명세"와 "UI 렌더링" 두 역할을 나눠 담당한다.
+
+### 컴포넌트별 소비 필드
+
+| 컴포넌트 | 읽는 필드 | 역할 |
+|---|---|---|
+| `ProductCard` | id, images, title, type, lux, kelvin | 그리드 셀 썸네일(Day/Night 블렌딩) + 타입 태그 + 스펙 라벨 |
+| `ProductGrid` | id | 반응형 배치, `product` 통째로 카드에 전달 |
+| `ProductGallery` / `useFilterTransition` | type, id | `type` 기준 필터링 + 전환 애니메이션 |
+| `ProductFilter` | PRODUCT_TYPES | 필터 탭(All/Ceiling/Stand/Wall/Desk) |
+| `ProductHeroTemplate` | title, description, type, lux, kelvin | 상세 상단 — 제품명·설명·스펙 카드 |
+| `ProductImageViewer` | id, images, title, lux, kelvin | 상세 메인 이미지(Day/Night) + Shared Element |
+| `ProductInfoTemplate` | price, currency, options, quantity, meta | 옵션 선택·가격·담기 |
+| `CartContext` / `CartItem` | product(images[0], title, price), options | 장바구니 항목 + 옵션 라벨 + 소계 |

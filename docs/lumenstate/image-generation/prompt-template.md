@@ -1,7 +1,11 @@
 # Lumenstate Image Prompt Template
 
-Gemini API (Google Nano Banana 2) 이미지 생성을 위한 프롬프트 템플릿.
+Gemini 이미지 생성 모델(`gemini-3.1-flash-image-preview`, 통칭 "Nano Banana" 계열) 프롬프트 템플릿.
 `common-style.md`의 공통 규칙과 `product-specs.md`의 제품별 명세를 조합한다.
+
+> **단일 진실 원천(SSOT)**: 아래 Day/Night 템플릿과 카메라 규칙은 `scripts/generate-product-images.mjs`의
+> `buildDayPrompt()` / `buildNightPrompt()` / `CAMERA_ANGLES`를 그대로 옮긴 것이다. 실제 생성 결과의 기준은 스크립트다.
+> **워크플로우**: Day = 텍스트→이미지 생성 / Night = **Day 이미지를 레퍼런스로 한 이미지→이미지 변환**(같은 형태 유지).
 
 ---
 
@@ -15,64 +19,77 @@ Gemini API (Google Nano Banana 2) 이미지 생성을 위한 프롬프트 템플
 
 ---
 
-## Day Mode Template
+## Day Mode Template (텍스트 → 이미지)
+
+`{camera}`에는 `mounting`별 `CAMERA_ANGLES` 값이 삽입된다 (아래 "Camera Angle Rule" 참조).
 
 ```
-A minimalist {form} lighting fixture, in the style of Dieter Rams and Bauhaus industrial design.
+A minimalist {form} lighting fixture. Extreme geometric precision in the tradition of Bauhaus, Dieter Rams, and Suprematist composition. Pure geometric abstraction rendered as a real physical object.
 
 {form_detail}
 
 Material: matte black anodized aluminum frame with white frosted glass diffuser.
-The light is OFF — the product exists as a pure sculptural object. The diffuser surface is opaque white, showing no illumination.
+The light is OFF — the product exists as a pure sculptural geometric object. The diffuser surface is opaque white, showing no illumination.
 
 Background: clean, uniform warm off-white (#E8E5E1), seamless infinite studio backdrop with no visible horizon line.
-Lighting: soft, even studio lighting from above-left at 45 degrees. Subtle soft contact shadow beneath the product (opacity 15%, soft edge).
+Lighting: soft, even studio lighting from directly above. Subtle soft contact shadow beneath the product (opacity 15%, soft edge).
 
-Composition: centered in frame, product fills approximately {fillRatio}% of the image area. The product must have at least 15% padding from all edges (top, bottom, left, right) of the frame. 3:4 portrait aspect ratio (1024x1365px).
-Camera: Straight-on frontal view, perfectly centered, perpendicular to the product face. No diagonal, no 3/4 view, no angled perspective.
+Composition: perfectly centered in frame with mathematical precision. Product fills approximately {fillRatio}% of the image area. Minimum 15% clear padding from all edges (top, bottom, left, right). 3:4 portrait aspect ratio.
+Camera: {camera}
 
-Style: photorealistic product photography with Apple-level precision and cleanliness. Geometric symmetry. Ultra-clean rendering.
-No environment, no text, no logos, no reflections, no lens flare, no bokeh, no color fringing, no people, no furniture, no diagonal view, no angled composition, no 3/4 view, no perspective distortion, no tilted camera.
+Style: photorealistic product photography with extreme geometric precision. Perfect bilateral symmetry. Apple-level cleanliness. The product is a real physical 3D object — frosted glass shows subtle internal light diffusion and refraction, matte aluminum shows fine micro-grain texture, edges catch soft light highlights. Physical dimensionality is conveyed through material rendering, not camera angle.
+No environment, no text, no logos, no lens flare, no bokeh, no color fringing, no people, no furniture, no diagonal view, no angled composition, no 3/4 view, no perspective distortion, no tilted camera, no oblique angle.
 ```
 
 ---
 
-## Night Mode Template
+## Night Mode Template (Day 이미지 → 이미지 변환)
+
+Night은 텍스트만으로 새로 만들지 않는다. **Day 이미지(`{id}.png`)를 `inlineData` 레퍼런스로 첨부**하고 아래 변환 프롬프트로 켜진 버전을 생성한다 → 동일 형태·구도·크기의 Day/Night 쌍이 보장된다.
 
 ```
-A minimalist {form} lighting fixture, in the style of Dieter Rams and Bauhaus industrial design.
+Transform this product lighting fixture image into a night/dark mode version. Keep the EXACT same product shape, angle, composition, position, and size.
 
-{form_detail}
+CRITICAL — Color & Tone Consistency (must be identical across all products):
+- Background: uniform deep warm black, exactly #12100E. No gradient, no variation, no visible environment. Seamless infinite backdrop.
+- Emission color: exactly 3800K color temperature, hex #FFC66E. Soft amber-white. NOT orange, NOT yellow, NOT pure white.
+- Diffuser center brightness: 100% (near white with warm tint).
+- Diffuser edge brightness: 80% (amber tone strengthens toward edges).
+- Wall/surface ambient reflection: 20-30% brightness, soft amber pool, radius ~1.5x product size.
+- Shadow: none (product is the only light source, no external lighting).
 
-Material: matte black anodized aluminum frame. The diffuser is now actively glowing with warm light.
-The light is ON, emitting warm 3800K color temperature light — a soft amber-white tone (#FFC66E).
-
-Light behavior: {light_pattern_detail}
-
-Background: deep warm black (#12100E), seamless infinite studio backdrop. No visible environment.
-The product is the ONLY light source in the entire scene. All illumination comes from the product's glowing diffuser.
-Nearby surfaces (wall behind, floor below) catch subtle warm amber reflections from the product's light.
-
-Composition: centered in frame, product fills approximately {fillRatio}% of the image area. The product must have at least 15% padding from all edges (top, bottom, left, right) of the frame. 3:4 portrait aspect ratio (1024x1365px).
-Camera: Straight-on frontal view, perfectly centered, perpendicular to the product face. No diagonal, no 3/4 view, no angled perspective.
-
-Style: photorealistic product photography with dramatic chiaroscuro lighting. Cinematic, atmospheric mood. The contrast between the warm glowing product and the deep dark surroundings is the visual focus.
-A small 4-pointed star symbol (✦) appears as a subtle watermark in the bottom-right corner (warm gray #C0B8A8, ~3% of frame height).
-No text, no logos, no lens flare, no gradient in background, no additional light sources, no people, no furniture, no diagonal view, no angled composition, no 3/4 view, no perspective distortion, no tilted camera.
+Changes to apply:
+- Background: change to #12100E, uniform and seamless.
+- Light state: turn the light ON. The frosted glass diffuser now emits warm 3800K light (#FFC66E).
+- Light behavior: {light_pattern_detail}
+- The product is the ONLY light source in the entire scene. No studio lighting remains.
+- Nearby surfaces catch subtle warm amber reflections from the product (opacity ~25%, soft falloff).
+- Matte black aluminum frame remains dark — visible only as a silhouette against the glow.
+Keep unchanged: product form, product size, material (matte black aluminum frame), camera angle, centered composition with 15% padding from all edges, aspect ratio.
+No text, no logos, no lens flare, no gradient in background, no additional light sources, no people, no furniture, no diagonal view, no angled composition, no perspective distortion.
 ```
 
 ---
 
 ## Camera Angle Rule (CRITICAL)
 
-**모든 제품은 설치 방식에 관계없이 정면 구도(straight-on frontal view)를 사용한다.**
+카메라 앵글은 **설치 방식(`mounting`)에 따라** 달라진다. Day 템플릿의 `{camera}` 슬롯에 아래 `CAMERA_ANGLES` 값이 삽입된다.
+
+| mounting | 시점 |
+|---|---|
+| `flush-mount` (천장) | 정바로 아래에서 위를 올려다봄 |
+| `wall-mount` (벽) | 벽면에 수직으로 정면 (두께·입체감 보임) |
+| `floor-standing` (바닥) | 눈높이 정면 |
+| `freestanding` (데스크) | 눈높이 정면 |
 
 ```
-Straight-on frontal view, perfectly centered, perpendicular to the product face.
-No diagonal, no 3/4 view, no angled perspective.
+flush-mount:    Viewed from directly below, looking straight up at the ceiling-mounted product. The product appears as a perfect geometric shape with complete bilateral symmetry. No perspective distortion, no tilted angle.
+wall-mount:     Viewed perfectly straight-on, perpendicular to the wall surface. The product is a real physical 3D object mounted on the wall — subtle depth, edge thickness, and material dimensionality are visible. Perfect bilateral symmetry.
+floor-standing: Viewed straight-on from the front at eye level. Perfect bilateral symmetry along the vertical axis. No tilted or angled perspective.
+freestanding:   Viewed straight-on from the front at eye level. Perfect bilateral symmetry. No tilted or angled perspective.
 ```
 
-대각선 구도, 기울어진 앵글, 원근 왜곡 금지.
+공통 원칙: 대각선 구도·3/4 뷰·기울어진 앵글·원근 왜곡 금지 (천장형은 정하방 시점, 그 외는 정면).
 
 ## Padding Boundary Rule (CRITICAL)
 
@@ -83,6 +100,9 @@ No diagonal, no 3/4 view, no angled perspective.
 ---
 
 ## Complete Examples
+
+> 아래 예시는 조립 형태를 보여주는 참고용이다. **실제 문구의 기준은 위 Day/Night 템플릿과 스크립트 `build*Prompt()`이며,
+> 제품 명세는 `product-specs.md`(#1~20)에서 가져온다.** (예시 본문 일부는 초기 버전 표현일 수 있음)
 
 ### Example 1: Product #1 — Day Mode
 
@@ -318,20 +338,29 @@ Keep UNCHANGED: composition, camera angle, person pose and position, product pos
 
 ## API Usage Notes
 
-### Gemini API (Nano Banana 2) 설정 권장값
+### 실제 설정 (`scripts/generate-product-images.mjs` 기준)
 
-```json
-{
-  "model": "nanobanana2",
-  "image_size": { "width": 1024, "height": 1365 },
-  "guidance_scale": 7.5,
-  "num_inference_steps": 50,
-  "seed": null
-}
+```js
+// @google/genai
+const MODEL = 'gemini-3.1-flash-image-preview';
+await ai.models.generateContent({
+  model: MODEL,
+  contents: prompt,                    // Night은 [{ inlineData: Day이미지 }, { text: prompt }]
+  config: {
+    responseModalities: ['TEXT', 'IMAGE'],
+    imageConfig: {
+      aspectRatio: '3:4',              // STYLE.aspectRatio
+      imageSize: '2K',                 // STYLE.resolution
+    },
+  },
+});
 ```
 
+- 키: 환경변수 `GEMINI_API_KEY` (또는 프로젝트 루트 `.env.local`)
+- 출력: `src/assets/product/{id}.png`(Day), `{id}-1.png`(Night)
+- 실행: `node scripts/generate-product-images.mjs --ids 16,17 --mode day`
+
 ### 일관성 유지 팁
-- 동일 제품의 Day/Night 쌍은 같은 `seed` 값을 사용하여 구도 일관성 확보
-- `guidance_scale`을 높이면 프롬프트 충실도 증가 (8-10 범위 실험)
-- 배경색이 정확하지 않으면 "solid background color exactly #E8E5E1" 강조
-- Night Mode에서 과도한 글로우가 나타나면 "subtle, controlled glow" 추가
+- Night는 항상 Day 이미지를 레퍼런스(`inlineData`)로 넣어 형태·구도 일치를 강제한다.
+- 배경색이 정확하지 않으면 "solid background color exactly #E8E5E1"(Day) / "#12100E"(Night) 강조.
+- Night에서 과도한 글로우가 나타나면 "subtle, controlled glow" 추가.
