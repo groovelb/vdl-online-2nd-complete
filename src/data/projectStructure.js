@@ -4,7 +4,7 @@
  * 수동 편집 금지. 재생성: pnpm generate-structure
  */
 export default {
-  "generatedAt": "2026-09-17T09:16:36.060Z",
+  "generatedAt": "2026-09-17T09:51:34.858Z",
   "root": {
     "name": "App",
     "kind": "component",
