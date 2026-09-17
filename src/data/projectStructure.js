@@ -4,7 +4,7 @@
  * 수동 편집 금지. 재생성: pnpm generate-structure
  */
 export default {
-  "generatedAt": "2026-09-17T06:45:38.858Z",
+  "generatedAt": "2026-09-17T09:16:36.060Z",
   "root": {
     "name": "App",
     "kind": "component",
@@ -53,8 +53,7 @@ export default {
             "kind": "component",
             "category": "components/motion",
             "file": "components/motion/SharedTransitionContext.jsx",
-            "storyTitle": null,
-            "storyId": null,
+            "ref": true,
             "children": [],
             "hooks": [],
             "data": []
@@ -101,16 +100,10 @@ export default {
                 "kind": "component",
                 "category": "components/cart",
                 "file": "components/cart/CartContext.jsx",
-                "storyTitle": null,
-                "storyId": null,
+                "ref": true,
                 "children": [],
                 "hooks": [],
-                "data": [
-                  {
-                    "name": "products",
-                    "file": "data/products.js"
-                  }
-                ]
+                "data": []
               }
             ],
             "hooks": [],
@@ -222,8 +215,7 @@ export default {
                     "kind": "component",
                     "category": "components/layout",
                     "file": "components/layout/LineGrid.jsx",
-                    "storyTitle": "Component/8. Layout/LineGrid",
-                    "storyId": "component-8-layout-linegrid",
+                    "ref": true,
                     "children": [],
                     "hooks": [],
                     "data": []
@@ -233,16 +225,9 @@ export default {
                     "kind": "component",
                     "category": "components/media",
                     "file": "components/media/TimeBlendImage.jsx",
-                    "storyTitle": null,
-                    "storyId": null,
+                    "ref": true,
                     "children": [],
-                    "hooks": [
-                      {
-                        "name": "useTimeline",
-                        "file": "components/media/useTimeline.jsx",
-                        "category": "components/media"
-                      }
-                    ],
+                    "hooks": [],
                     "data": []
                   },
                   {
@@ -289,8 +274,7 @@ export default {
                     "kind": "component",
                     "category": "components/layout",
                     "file": "components/layout/LineGrid.jsx",
-                    "storyTitle": "Component/8. Layout/LineGrid",
-                    "storyId": "component-8-layout-linegrid",
+                    "ref": true,
                     "children": [],
                     "hooks": [],
                     "data": []
@@ -452,21 +436,8 @@ export default {
                             "kind": "component",
                             "category": "components/card",
                             "file": "components/card/CustomCard.jsx",
-                            "storyTitle": "Component/3. Card/CustomCard",
-                            "storyId": "component-3-card-customcard",
-                            "children": [
-                              {
-                                "name": "CardContainer",
-                                "kind": "component",
-                                "category": "components/card",
-                                "file": "components/card/CardContainer.jsx",
-                                "storyTitle": "Component/3. Card/CardContainer",
-                                "storyId": "component-3-card-cardcontainer",
-                                "children": [],
-                                "hooks": [],
-                                "data": []
-                              }
-                            ],
+                            "ref": true,
+                            "children": [],
                             "hooks": [],
                             "data": []
                           },
@@ -475,16 +446,9 @@ export default {
                             "kind": "component",
                             "category": "components/media",
                             "file": "components/media/TimeBlendImage.jsx",
-                            "storyTitle": null,
-                            "storyId": null,
+                            "ref": true,
                             "children": [],
-                            "hooks": [
-                              {
-                                "name": "useTimeline",
-                                "file": "components/media/useTimeline.jsx",
-                                "category": "components/media"
-                              }
-                            ],
+                            "hooks": [],
                             "data": []
                           }
                         ],
@@ -533,8 +497,7 @@ export default {
                 "kind": "component",
                 "category": "components/kinetic-typography",
                 "file": "components/kinetic-typography/RandomRevealText.jsx",
-                "storyTitle": "Interactive/11. KineticTypography/RandomRevealText",
-                "storyId": "interactive-11-kinetictypography-randomrevealtext",
+                "ref": true,
                 "children": [],
                 "hooks": [],
                 "data": []
@@ -585,7 +548,169 @@ export default {
                 "file": "components/templates/CheckoutTemplate.jsx",
                 "storyTitle": null,
                 "storyId": null,
-                "children": [],
+                "children": [
+                  {
+                    "name": "CheckoutLayout",
+                    "kind": "component",
+                    "category": "components/checkout",
+                    "file": "components/checkout/CheckoutLayout.jsx",
+                    "storyTitle": null,
+                    "storyId": null,
+                    "children": [],
+                    "hooks": [],
+                    "data": []
+                  },
+                  {
+                    "name": "CheckoutLogo",
+                    "kind": "component",
+                    "category": "components/checkout",
+                    "file": "components/checkout/CheckoutLogo.jsx",
+                    "storyTitle": null,
+                    "storyId": null,
+                    "children": [],
+                    "hooks": [],
+                    "data": [
+                      {
+                        "name": "content",
+                        "file": "data/content.js"
+                      }
+                    ]
+                  },
+                  {
+                    "name": "CheckoutSteps",
+                    "kind": "component",
+                    "category": "components/checkout",
+                    "file": "components/checkout/CheckoutSteps.jsx",
+                    "storyTitle": null,
+                    "storyId": null,
+                    "children": [],
+                    "hooks": [],
+                    "data": []
+                  },
+                  {
+                    "name": "ExpressCheckout",
+                    "kind": "component",
+                    "category": "components/checkout",
+                    "file": "components/checkout/ExpressCheckout.jsx",
+                    "storyTitle": null,
+                    "storyId": null,
+                    "children": [],
+                    "hooks": [],
+                    "data": []
+                  },
+                  {
+                    "name": "ContactForm",
+                    "kind": "component",
+                    "category": "components/checkout",
+                    "file": "components/checkout/ContactForm.jsx",
+                    "storyTitle": null,
+                    "storyId": null,
+                    "children": [
+                      {
+                        "name": "UnderlineInput",
+                        "kind": "component",
+                        "category": "components/input",
+                        "file": "components/input/UnderlineInput.jsx",
+                        "storyTitle": null,
+                        "storyId": null,
+                        "children": [],
+                        "hooks": [],
+                        "data": []
+                      }
+                    ],
+                    "hooks": [],
+                    "data": []
+                  },
+                  {
+                    "name": "ShippingForm",
+                    "kind": "component",
+                    "category": "components/checkout",
+                    "file": "components/checkout/ShippingForm.jsx",
+                    "storyTitle": null,
+                    "storyId": null,
+                    "children": [
+                      {
+                        "name": "UnderlineInput",
+                        "kind": "component",
+                        "category": "components/input",
+                        "file": "components/input/UnderlineInput.jsx",
+                        "ref": true,
+                        "children": [],
+                        "hooks": [],
+                        "data": []
+                      },
+                      {
+                        "name": "UnderlineSelect",
+                        "kind": "component",
+                        "category": "components/input",
+                        "file": "components/input/UnderlineSelect.jsx",
+                        "storyTitle": null,
+                        "storyId": null,
+                        "children": [],
+                        "hooks": [],
+                        "data": []
+                      }
+                    ],
+                    "hooks": [],
+                    "data": []
+                  },
+                  {
+                    "name": "CheckoutActions",
+                    "kind": "component",
+                    "category": "components/checkout",
+                    "file": "components/checkout/CheckoutActions.jsx",
+                    "storyTitle": null,
+                    "storyId": null,
+                    "children": [],
+                    "hooks": [],
+                    "data": []
+                  },
+                  {
+                    "name": "PolicyLinks",
+                    "kind": "component",
+                    "category": "components/checkout",
+                    "file": "components/checkout/PolicyLinks.jsx",
+                    "storyTitle": null,
+                    "storyId": null,
+                    "children": [],
+                    "hooks": [],
+                    "data": []
+                  },
+                  {
+                    "name": "OrderSummary",
+                    "kind": "component",
+                    "category": "components/checkout",
+                    "file": "components/checkout/OrderSummary.jsx",
+                    "storyTitle": null,
+                    "storyId": null,
+                    "children": [
+                      {
+                        "name": "OrderItem",
+                        "kind": "component",
+                        "category": "components/checkout",
+                        "file": "components/checkout/OrderItem.jsx",
+                        "storyTitle": null,
+                        "storyId": null,
+                        "children": [
+                          {
+                            "name": "CartContext",
+                            "kind": "component",
+                            "category": "components/cart",
+                            "file": "components/cart/CartContext.jsx",
+                            "ref": true,
+                            "children": [],
+                            "hooks": [],
+                            "data": []
+                          }
+                        ],
+                        "hooks": [],
+                        "data": []
+                      }
+                    ],
+                    "hooks": [],
+                    "data": []
+                  }
+                ],
                 "hooks": [],
                 "data": []
               },
@@ -594,16 +719,10 @@ export default {
                 "kind": "component",
                 "category": "components/cart",
                 "file": "components/cart/CartContext.jsx",
-                "storyTitle": null,
-                "storyId": null,
+                "ref": true,
                 "children": [],
                 "hooks": [],
-                "data": [
-                  {
-                    "name": "products",
-                    "file": "data/products.js"
-                  }
-                ]
+                "data": []
               }
             ],
             "hooks": [],
@@ -653,8 +772,7 @@ export default {
                     "kind": "component",
                     "category": "components/container",
                     "file": "components/container/SectionContainer.jsx",
-                    "storyTitle": "Component/2. Container/SectionContainer",
-                    "storyId": "component-2-container-sectioncontainer",
+                    "ref": true,
                     "children": [],
                     "hooks": [],
                     "data": []
@@ -691,16 +809,9 @@ export default {
                             "kind": "component",
                             "category": "components/media",
                             "file": "components/media/TimeBlendImage.jsx",
-                            "storyTitle": null,
-                            "storyId": null,
+                            "ref": true,
                             "children": [],
-                            "hooks": [
-                              {
-                                "name": "useTimeline",
-                                "file": "components/media/useTimeline.jsx",
-                                "category": "components/media"
-                              }
-                            ],
+                            "hooks": [],
                             "data": []
                           }
                         ],
@@ -731,8 +842,7 @@ export default {
                             "kind": "component",
                             "category": "components/layout",
                             "file": "components/layout/LineGrid.jsx",
-                            "storyTitle": "Component/8. Layout/LineGrid",
-                            "storyId": "component-8-layout-linegrid",
+                            "ref": true,
                             "children": [],
                             "hooks": [],
                             "data": []
@@ -773,8 +883,7 @@ export default {
                                 "kind": "component",
                                 "category": "components/input",
                                 "file": "components/input/UnderlineInput.jsx",
-                                "storyTitle": null,
-                                "storyId": null,
+                                "ref": true,
                                 "children": [],
                                 "hooks": [],
                                 "data": []
@@ -796,8 +905,7 @@ export default {
                                 "kind": "component",
                                 "category": "components/input",
                                 "file": "components/input/UnderlineSelect.jsx",
-                                "storyTitle": null,
-                                "storyId": null,
+                                "ref": true,
                                 "children": [],
                                 "hooks": [],
                                 "data": []
@@ -838,16 +946,10 @@ export default {
                         "kind": "component",
                         "category": "components/cart",
                         "file": "components/cart/CartContext.jsx",
-                        "storyTitle": null,
-                        "storyId": null,
+                        "ref": true,
                         "children": [],
                         "hooks": [],
-                        "data": [
-                          {
-                            "name": "products",
-                            "file": "data/products.js"
-                          }
-                        ]
+                        "data": []
                       }
                     ],
                     "hooks": [],
@@ -885,8 +987,7 @@ export default {
                             "kind": "component",
                             "category": "components/input",
                             "file": "components/input/QuantitySelector.jsx",
-                            "storyTitle": null,
-                            "storyId": null,
+                            "ref": true,
                             "children": [],
                             "hooks": [],
                             "data": []
@@ -896,21 +997,8 @@ export default {
                             "kind": "component",
                             "category": "components/product",
                             "file": "components/product/ProductOptions.jsx",
-                            "storyTitle": "Custom Component/product/ProductOptions",
-                            "storyId": "custom-component-product-productoptions",
-                            "children": [
-                              {
-                                "name": "UnderlineSelect",
-                                "kind": "component",
-                                "category": "components/input",
-                                "file": "components/input/UnderlineSelect.jsx",
-                                "storyTitle": null,
-                                "storyId": null,
-                                "children": [],
-                                "hooks": [],
-                                "data": []
-                              }
-                            ],
+                            "ref": true,
+                            "children": [],
                             "hooks": [],
                             "data": []
                           }
@@ -949,16 +1037,10 @@ export default {
                     "kind": "component",
                     "category": "components/cart",
                     "file": "components/cart/CartContext.jsx",
-                    "storyTitle": null,
-                    "storyId": null,
+                    "ref": true,
                     "children": [],
                     "hooks": [],
-                    "data": [
-                      {
-                        "name": "products",
-                        "file": "data/products.js"
-                      }
-                    ]
+                    "data": []
                   }
                 ],
                 "hooks": [],
