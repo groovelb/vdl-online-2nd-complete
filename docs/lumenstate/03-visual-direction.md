@@ -1,190 +1,200 @@
-# Lumenstate — Visual Direction
+# Lumenstate: Visual Direction
 
-> 브랜드 철학(Immanence / Continuity / Flexibility)을 **시각 언어**로 번역한다.
-> 여기서는 비주얼 컨셉을 정의하고, MUI 기본 테마를 **어느 방향으로 조정해야 하는지** 결정한다.
-> 구체 토큰 값은 구현 단계에서 이 방향을 근거로 확정한다.
+> 이 문서가 결정하는 것: 정체성과 화면이 어떻게 보이는가
+> 입력: 01 3절 정체성, 02 2.1절 페이지, 02 4절 원칙 · 출력 대상: theme.js, /component-work, /layout-composer, /visual-asset-prompt (넘기는 항목은 이 문서 6절 표)
 
----
+## 결정 현황
 
-## 톤앤매너
+이 표의 확정 항목만 다음 문서가 그대로 인용한다. 잠정은 `(잠정)` 표시를 달고 인용하고, 미정은 인용하지 않는다.
 
-### 키워드
+| 섹션 | 상태 | 비고 |
+|---|---|---|
+| 1. 무드 | 확정 | |
+| 2. 레이아웃 전략 | 잠정 | 배정 미승인 (Q3) |
+| 3.1 색 | 확정 | theme 실제 값 |
+| 3.2 타이포 | 확정 | theme 실제 값 |
+| 3.3 형태·표면·모션 | 확정 | theme 실제 값 |
+| 4. 이미지·에셋 방향 | 확정 | image-generation 요약 |
+| 4.1 레퍼런스 | 미정 | 제공 자료 없음 |
+| 5. 변경 토큰 요약 | 확정 | 현재값은 스타터킷 |
+| 6. 다음 문서로 넘기는 것 | 확정 | |
 
-- **Editorial** — 건축 저널·독립 매거진 지면의 리듬
-- **Architectural** — 장식이 아닌 구조로 말한다
-- **Warm Minimal** — 차가운 미니멀이 아니라 **빛의 온기**를 품은 절제
-- **Time-Aware** — 낮과 밤이 같은 체계 안에 공존
-- **Flat & Quiet** — 그림자·그라데이션·글로우 없이 평면으로
+문서 상태: 잠정 승인 (하드 게이트 충족)
+개정: 2026-09-16 v2 · 변경: 새 포맷으로 재구성 (교육 예제)
 
-### 태도 선언
+비고:
 
-- 장식으로 외치지 않는다 — **여백·타입·라인**이 말한다
-- 디지털의 푸른 뉴트럴이 아닌 **3800K의 따뜻한 뉴트럴**을 쓴다
-- 어떤 장면도 낮 전용/밤 전용이 아니다 — 두 상태가 **같은 팔레트 안에** 있다
-
----
-
-## 색감
-
-### 4색 원칙
-
-Lumenstate의 팔레트는 **4개 색**만으로 운용된다. 그래디언트·글로우·과잉 색상 조합을 배제하는 것이 이 브랜드의 절제 원칙이다.
-
-| 역할 | 색 | 성격 |
-|------|-----|-----|
-| **Warm Black** | 따뜻한 검정 | 전경·본문·브랜드 중심. Pure Black이 아닌 **약간 갈색을 품은 흑** |
-| **Wall Tint White** | 벽 톤 화이트 | 배경·종이. 푸른 기가 전혀 없는 **페이퍼 뉴트럴** |
-| **3800K White** | 따뜻한 흰색 | 다크 배경 위의 텍스트 |
-| **3800K Amber** | 3800K 엠버 | 유일한 악센트. 브랜드의 색온도 자체를 색으로 번역 |
-
-### MUI 기본 팔레트를 어떻게 바꾸는가
-
-- **Primary = Material Blue → Warm Black**: 조명 브랜드가 푸른 디지털 톤이면 안 된다. 빛의 반대편(흑)이 브랜드 중심이 된다.
-- **Secondary = Purple → 3800K Amber**: 포인트 색은 조명 자체의 색온도를 시각화한 것이어야 한다.
-- **Background = Cool White → Wall Tint**: 종이/벽처럼 따뜻한 뉴트럴로 교체. 배경과 카드(paper)는 색을 구분하지 않고 같은 톤으로 평평하게 유지한다.
-- **Grey 스케일 재정의**: MUI 기본 회색은 푸른 기가 있다. Lumenstate는 **Warm Grey** 스케일을 새로 짜되, 50 근처는 Wall Tint에, 900 근처는 Warm Black에 붙도록 연속적으로 정의한다.
-
-### 시간대 팔레트 (브랜드 고유 토큰)
-
-Continuity 가치를 위해 **시간대별 배경색**이 팔레트 수준에 정의되어야 한다. 정오에서 자정까지 4단계 — 밝은 Wall Tint에서 Warm Black까지 선형적으로 보간되는 스펙트럼이 필요하다. 이 값은 타임라인 조작에 따라 페이지 배경이 구독하는 소스다.
+- **2절 잠정**: 아키타입 id는 `src/data/layoutTaxonomyData.js` 목록에서 골랐고, 페이지별 배정은 화면 구성에서 추론했다 (Q3).
+- **3절 값 출처**: `src/styles/themes/default.js`의 palette, typography, shape, shadows, transitions, components.
+- **5절 현재값 출처**: 스타터킷 `component-work/resources/mui-theme.md`. 그 문서가 정하지 않은 축은 "미지정 (MUI 기본)"으로 적었다.
 
 ---
 
-## 타이포
+## 1. 무드
 
-### 두 개의 얼굴
-
-- **Display (h1~h6) — 세리프** : 에디토리얼 헤드라인. 빛이 확산되는 감각이 있는 세리프체(Tiempos Headline 계열).
-- **Body / 라벨 — 한글+영문 산세리프** : Pretendard 기반. 한글 가독성이 영문 디자인과 충돌하지 않는 것이 핵심.
-
-이 이원 구조 자체가 **선언(영문 세리프) + 해설(한글 산세리프)** 이라는 브랜드 카피 톤을 그대로 반영한다.
-
-### MUI 기본 타이포에서 바꾸는 방향
-
-- **디스플레이 웨이트**: MUI 기본은 Light(300) 중심. Lumenstate는 **두껍게(700~800)**. 얇은 히어로가 아닌 **선언적 두께**.
-- **레터 스페이싱**: 디스플레이는 **타이트하게 음수값**. 지면이 압축된 에디토리얼 감각.
-- **본문 스케일**: MUI `body1` 16px → **20px 전후로 상향**. 잡지 본문 크기. 라인 높이도 **1.7 전후**로 넓혀 한글 읽기 쾌적성 확보.
-- **오버라인 라벨**: 레터 스페이싱을 **더 넓게**(`0.1em` 수준). 캡스 라벨이 "에디토리얼 캡션"의 역할을 맡는다.
-- **버튼**: MUI 기본 `UPPERCASE`를 **자연 케이스**로 해제. 외치지 않는 톤.
+- **키워드** (최대 5, 01 3.2절에서 파생): Editorial · Architectural · Warm Minimal · Time-Aware · Flat & Quiet
+- **태도 선언** (최대 3): 장식으로 외치지 않는다, 여백과 타입과 라인이 말한다. 디지털의 푸른 뉴트럴이 아니라 3800K의 따뜻한 뉴트럴을 쓴다. 어떤 장면도 낮 전용이거나 밤 전용이 아니다, 두 상태가 같은 팔레트 안에 있다.
+- **하지 않는 것** (최대 5): 그라디언트와 글로우 · 방향성 드롭섀도 · 둥근 모서리 · 대문자 버튼 · 박스형 아웃라인 폼
 
 ---
 
-## 모양 · 평면성
+## 2. 레이아웃 전략
 
-### 각지고 평평하게
+구조:
 
-MUI 기본은 `borderRadius: 4`로 부드러운 라운드를 준다. Lumenstate는 **전부 0**.
-- 카드·버튼·인풋·칩·Paper 모두 각진 모서리
-- 이유: 건축·지면의 성격. 둥근 모서리는 "앱스러운" 소프트니스를 만든다.
+| 페이지 (02 2.1절) | 공간 모델 | 아키타입 | 구분 언어 |
+|---|---|---|---|
+| Landing | 유동 | narrative-scroll + modular-grid (잠정, Q3) | 선 |
+| ProductDetail | 혼합 | split-hero + sectioned-stack (잠정, Q3) | 선 |
+| Checkout | 고정 | asymmetric-two-up + supporting-pane (잠정, Q3) | 선 |
+| 전역 레이어 | 고정 | off-canvas-panel + z-axis-layering (잠정, Q3) | 선 |
 
-### 그림자는 "떠 있는" 게 아니라 "빛이 감싸는" 것
+콘텐츠 신호 (/layout-composer 입력):
 
-- MUI 기본은 y축 offset이 있는 **방향성 drop shadow** (요소가 공중에 떠 있는 느낌).
-- Lumenstate는 **offset 0, blur만** — 광원이 요소를 균일하게 감싸는 **확산광**처럼 동작.
-- 이유: 조명 브랜드의 그림자는 **빛의 언어**여야 한다. 떨어지는 드롭섀도는 브랜드 은유와 충돌한다.
+| 페이지 | 밀도 | text / media / repeat / hierarchy |
+|---|---|---|
+| Landing | airy | mixed / dominant / many / two-tier |
+| ProductDetail | airy | long / dominant / few / two-tier |
+| Checkout | compact | long / none / single / flat |
+| 전역 레이어 | compact | micro / accent / few / flat |
 
----
-
-## 선(Line)이 디자인 언어다 — 미니멀 매거진 감각
-
-면(fill)이나 블록(box)이 아닌 **1px 선**이 Lumenstate의 공간을 나눈다. 잡지 지면에서 섹션을 가르는 **괘선**, 기사와 캡션을 분리하는 **디바이더**, 기입 필드를 암시하는 **밑줄** — 이 세 가지 선의 역할이 사이트 전역에서 반복된다.
-
-### 선의 사용 원칙
-
-- **그리드 분할선**: 제품 그리드는 박스 카드가 아니라 **셀 사이에 1px 라인**만 두는 형태. 배경과 카드의 구분이 없고, 오직 괘선만이 경계를 만든다 → `LineGrid` 패턴.
-- **섹션 디바이더**: 랜딩의 섹션 경계, 제품 상세의 정보 블록 경계, 체크아웃 각 단계 경계 모두 **얇은 수평선** 한 줄로 분리.
-- **필드 언더라인**: 모든 입력 필드는 밑줄 1px. 박스가 아닌 **지면의 기입란**.
-- **강조 언더라인**: 링크/보조 액션은 배경색이나 버튼이 아닌 **텍스트 밑줄**로 처리.
-
-### 시각 효과
-
-- 면을 나누는 것이 **색이 아니라 선**이므로, 배경이 단일 톤(Wall Tint)으로 유지되어도 정보 위계가 무너지지 않는다.
-- 그림자·둥근 모서리·필 버튼 같은 "물질적 UI"가 사라지고, **인쇄 지면의 질서**가 남는다.
-- 동일한 1px 선이 그리드·디바이더·언더라인·강조로 **한 벌처럼** 작동해, 별다른 장식 없이도 전체 페이지가 에디토리얼 매거진의 인상을 갖는다.
+- 공간 모델: 유동 / 고정 / 혼합. 아키타입: `src/data/layoutTaxonomyData.js`의 id. 구분 언어: 선 / 면 / 여백.
+- Landing의 서사 구간은 `horizontal-scroll`을 함께 쓴다 (잠정, Q3).
+- 전역 리듬: 면이나 블록이 아니라 1px 선이 공간을 나눈다. 그리드 분할선, 섹션 디바이더, 필드 언더라인, 강조 밑줄이 한 벌처럼 반복된다. 섹션 간 수직 간격은 잡지 스프레드 수준으로 넓혀 경계를 의심하지 않게 한다. 좌우 여백은 반응형이고, 대형 화면에서 콘텐츠가 과도하게 늘어나지 않도록 브레이크포인트 상단(xl 1440)에서 폭을 잡는다.
 
 ---
 
-## 인풋 · 폼 (에디토리얼 핵심)
+## 3. 토큰 방향
 
-> 위의 **"선이 디자인 언어"** 원칙이 가장 직접적으로 드러나는 컴포넌트.
-> MUI 기본 폼을 그대로 두면 박스 기반 웹앱이 되고, 에디토리얼 매거진 감각이 깨진다.
+### 3.1 색 (역할 팔레트)
 
-### 박스에서 언더라인으로 (input의 border 옵션 교체)
+| 역할 | 이름 | 값 | MUI 토큰 | 근거 (01 3절) |
+|---|---|---|---|---|
+| 전경·브랜드 중심 | Warm Black | `#12100E` | `primary.main`, `text.primary` | Immanence |
+| 배경·지면 | Wall Tint White | `#E8E5E1` | `background.default`, `.paper` | 절제 |
+| 다크 위 텍스트 | 3800K White | `#F2E9DA` | `brand.warmWhite` | Continuity |
+| 유일한 악센트 | 3800K Amber | `#FFC66E` | `secondary.main`, `brand.accent` | 색온도의 번역 |
+| 구분선 | Warm Black 12% | `#12100E1F` | `divider` | 선이 구분 언어 |
+| 중간 톤 | Warm Grey 50~900 | `#FAF9F7` ~ `#12100E` | `grey.*` | 웜 뉴트럴 일관 |
+| 시간대 배경 | Noon / Afternoon / Evening / Midnight | #E8E5E1 / #A19F9B / #595654 / #12100E | `timeline.*` | Continuity |
 
-- MUI 기본은 `variant="outlined"` — 사방 테두리 박스가 표준.
-- Lumenstate는 **`variant="standard"` 언더라인 1px**이 표준.
-- 즉, **input의 border 옵션 자체가 바뀐다**: `border: 1px solid ...` (4면) → `border-bottom: 1px solid ...` (1면).
-- 이유: 에디토리얼 사이트의 폼은 "웹앱 UI"가 아니라 **"지면의 기입 필드"** 로 느껴져야 한다. 박스형 아웃라인은 이 감각을 파괴한다. 앞서 정의한 **선의 디자인 언어**가 입력 필드에도 그대로 이어지는 것이 자연스럽다.
+비고:
 
-### 언더라인의 3단계
+- Warm Black은 `common.black`, Wall Tint White는 `common.white`와 `grey.100`에도 들어간다.
+- 4색 원칙: 위 네 브랜드 색 외의 색은 상태 색(error·warning·info·success)에만 쓴다.
+- 시간대 배경은 TimeOfDay가 구독하는 소스다.
 
-- **기본 상태**: Warm Black @ 아주 낮은 불투명도 (희미한 힌트)
-- **Hover**: 선명도 상승
-- **Focus**: 선명한 Warm Black
-- **전환**: 부드러운 색상 트랜지션으로, 딱딱한 on/off가 아닌 **점등되는 감각**
+### 3.2 타이포
 
-### 라벨
+| 역할 | 서체 | 방향 (웨이트·크기·자간·행간) | MUI variant |
+|---|---|---|---|
+| 디스플레이 대 | Tiempos Headline 계열 세리프 | 800, 6rem, 자간 -0.04em, 행간 1.05 | h1 |
+| 디스플레이 중 | 같은 세리프 | 700, 4.5~1.75rem, 자간 -0.04~-0.02em | h2~h5 |
+| 디스플레이 소 | 같은 세리프 | 500, 1.5rem, 자간 -0.02em | h6 |
+| 본문 | Pretendard Variable | 400, 1.25rem·1rem, 행간 1.7, 자간 0 | body1, body2 |
+| 라벨 | Pretendard Variable | 500, 1rem·0.875rem, 행간 1.5 | subtitle1, subtitle2 |
+| 캡션 | Pretendard Variable | 400, 0.75rem, 자간 0.02em | caption |
+| 오버라인 | Pretendard Variable | 500, 0.75rem, 자간 0.1em, 대문자 | overline |
+| 버튼 | Pretendard Variable | 500, 0.875rem, 자간 0.02em, 자연 케이스 | button |
 
-- 인풋 위 라벨은 **작고 또렷하게**, 레터 스페이싱을 약간 주어 **분류 정보**처럼 읽히게.
-- 플레이스홀더는 Warm Black 감산톤으로 본문보다 눈에 덜 띄게.
+비고: 세리프 폴백은 Georgia다. 영문 세리프가 선언, 한글 산세리프가 해설을 맡는 이원 구조가 브랜드 카피 톤과 같다.
 
-### Select
+### 3.3 형태·표면·모션
 
-- 드롭다운도 동일한 언더라인 체계를 따른다.
-- 열렸을 때 아이콘이 180도 회전 — 명확한 피드백.
-- 포커스 시 배경색을 입히지 않는다. **언더라인 톤이 배경보다 우선**.
+| 축 | 방향 | 값 |
+|---|---|---|
+| radius | 전부 각지게 | `shape.borderRadius: 0`, 기본 컴포넌트도 0 |
+| elevation | 방향성 없는 확산광 | offset 0, blur 12~58px, 투명도 0.04~0.27 |
+| 표면 | 배경과 종이를 구분하지 않음 | Paper 배경 transparent, 본문은 Wall Tint |
+| 선 | 1px로 구분 | `border-bottom: 1px`, 12%/80%/100%, 200ms |
+| 전환 템포 | 느린 층 추가 | slow 600 / slower 900 / slowest 1200 (ms) |
+| 이징 | 점멸 없는 사인 곡선 | `cubic-bezier(0.37, 0, 0.63, 1)` |
+| 간격 | 8px 그리드 유지 | `spacing: 8`, 브레이크포인트 xl 1440 |
 
----
+비고:
 
-## 버튼 · 액션
-
-- 각진 모서리 · 자연 케이스 · **Warm Black 필드 + Wall Tint 텍스트**가 기본 톤.
-- Secondary 액션은 언더라인 텍스트 링크 + Amber 포인트로 처리.
-- **강조는 색이 아니라 여백과 타입 웨이트로** — 버튼이 페이지에서 튀지 않는다.
-
----
-
-## 간격 · 호흡
-
-- 기본 스케일은 **MUI 8px 그리드 유지** (학습 비용·호환성).
-- 단, 섹션 간 수직 간격은 **잡지 스프레드 수준으로 여유롭게**. 한 섹션이 끝나고 다음이 시작하는 경계는 의심의 여지가 없어야 한다.
-- 페이지 좌우 여백은 반응형으로, 대형 화면에서는 **콘텐츠가 과도하게 확장되지 않도록** 의미 토큰 레벨에서 제어.
-
----
-
-## 전환의 템포
-
-- MUI 기본은 웹앱용 **빠른 전환**(~300ms)이 표준.
-- Lumenstate는 여기에 **느린 템포 층**을 추가: 낮↔밤 블렌딩은 0.6초, 섹션 진입은 0.9초, Shared Element는 1.2초.
-- 이징은 점멸 없는 **부드러운 사인 곡선**(easeInOutSine)을 기본으로 — 조명이 서서히 켜지고 꺼지는 감각.
-- 이유: 시간의 흐름 자체가 콘텐츠인 사이트에서, 전환 속도는 곧 **브랜드의 호흡**이다.
-
----
-
-## MUI 기본 테마 조정 방향 (요약)
-
-위 비주얼 컨셉이 MUI 테마에 내려올 때, 아래 축들이 **반드시** 바뀌어야 한다. 값은 구현에서 확정하되, 방향은 이 컨셉에서 벗어나지 않는다.
-
-| 축 | 조정 방향 |
-|----|----------|
-| Palette | Primary = 푸른색 → **Warm Black**, Secondary = 퍼플 → **Warm Amber**, Background = Cool White → **Wall Tint**, Grey 스케일을 **Warm Grey로 재정의** |
-| Typography | Display를 **세리프 + 두껍게 + 타이트 스페이싱**, Body를 **Pretendard + 스케일 상향 + 라인 높이 넓힘**, Overline **레터 스페이싱 확대**, Button **자연 케이스** |
-| Shape | `borderRadius`를 **0**으로 고정 — 모든 기본 컴포넌트에 파급 |
-| Shadows | 방향성 drop shadow → **offset 0 + blur만 있는 확산광** 체계 |
-| Input | 기본 variant을 **outlined → standard(언더라인)** 로 전환, 3단계 상태색(기본/hover/focus) + 부드러운 색 트랜지션 |
-| Button | `borderRadius 0` · `textTransform: none` |
-| Transitions | 기본 속도 유지 + **slow / slower / slowest** 층 추가, easeInOutSine **smooth** 이징 추가 |
-| 신설 | `palette.brand.*` (4색 의미 토큰) · `palette.timeline.*` (낮↔밤 4구간) 추가 |
+- radius 0은 Button, Paper, Card, Chip, TextField에 개별 오버라이드로도 걸려 있다.
+- elevation 1단계는 `0 0 12px rgba(18,16,14,0.04)`, 24단계는 `0 0 58px rgba(18,16,14,0.27)`이다.
+- 선의 세 단계는 기본 12%, hover 80%, focus 100% 불투명도다.
+- 템포 배정: slow는 낮·밤 블렌딩, slower는 섹션 진입, slowest는 공유 요소 전환이다. 이징은 easeInOutSine이다.
 
 ---
 
-## 정리
+## 4. 이미지·에셋 방향
 
-이 Visual Direction은 **"왜 이렇게 보여야 하는가"** 를 정의한다.
-토큰의 구체 값은 구현 단계에서 확정하되, 어떤 값이든 아래 세 질문을 통과해야 한다.
+| 에셋 유형 | 쓰이는 곳 | LOOK 키워드 (1~2) |
+|---|---|---|
+| 제품 컷 Day | ProductCard, ProductGallery | photorealistic product photography |
+| 제품 컷 Night | ProductCard, ProductGallery | self-illumination |
+| 브랜드 무드 Hero | Landing Hero 메인 | editorial 공간 사진 |
+| 브랜드 무드 보조 | Landing Hero 사이드, 갤러리 | editorial 공간 사진 |
 
-1. 이 값은 **Immanence / Continuity / Flexibility** 중 하나 이상과 연결되는가?
-2. MUI 기본의 "푸른 웹앱" 톤을 **에디토리얼 브랜드**로 끌어오는가?
-3. 다른 토큰과 **같은 체계** 안에 있는가 (낮/밤 일관, 웜 뉴트럴 일관)?
+에셋별 방향 (에셋 유형마다 한 블록):
 
-세 질문 중 하나라도 통과하지 못하면 그 값은 다시 선택한다.
+- **제품 컷 Day**
+  - FORMAT: 3:4, 정중앙 정면, 제품이 프레임의 40~60%, 사방 15% 이상 여백, 이음매 없는 스튜디오 배경 `#E8E5E1`
+  - LOOK: Bauhaus 기하 정밀, 좌상단 소프트박스 확산광, 제품 아래 약한 접지 그림자
+  - SUBJECT: 무광 검정 알루미늄 프레임과 화이트 프로스티드 글라스, 조명은 꺼진 상태
+  - 하지 않는 것: 대각선·3/4 뷰, 원근 왜곡, 크롬·골드·우드, 보케, 렌즈 플레어
+- **제품 컷 Night**
+  - FORMAT: Day 컷과 같은 형태·구도·크기, 배경 `#12100E`. Day 이미지를 레퍼런스로 변환한다
+  - LOOK: 제품 자체가 유일한 광원, 발광색 3800K `#FFC66E`, 디퓨저 중심 100% 가장자리 80%, 주변 반사 20~30%
+  - SUBJECT: Day와 1:1 쌍을 이룬다. 우하단에 4각 별 워터마크
+  - 하지 않는 것: 외부 조명, 그림자, 배경 그라디언트, 오렌지나 순백으로 치우친 발광
+- **브랜드 무드 Hero**
+  - FORMAT: 3:2, 인물과 조명은 우측 중앙에서 하단, 좌상단은 타이틀이 얹히므로 완전히 빈 벽
+  - LOOK: 웜 뉴트럴 톤, 벽은 단일 평면, 천장선 없음
+  - SUBJECT: 일반 실내의 2배 이상 규모감, 같은 장면의 낮·밤 두 장
+  - 하지 않는 것: 코너·단차·구조물 노출, 좌상단 요소 배치
+- **브랜드 무드 보조**
+  - FORMAT: 3:4(56:75) 또는 16:9, 같은 행의 이미지와 높이가 맞는 비율만, 원본 비율 그대로 표시
+  - LOOK: Hero와 같은 톤, 정면 대칭 또는 측면 구도
+  - SUBJECT: 무드 이름별로 낮·밤 파일 쌍
+  - 하지 않는 것: 컨테이너에 억지로 맞추는 크롭
+
+### 4.1 레퍼런스 (사용자 제공만)
+
+해당 없음: 사용자가 제공한 레퍼런스가 원문에 없다.
+
+---
+
+## 5. 변경 토큰 요약 (theme.js 입력)
+
+| 토큰 경로 | 현재값 | 변경값 | 적용 대상 |
+|---|---|---|---|
+| `palette.primary.main` | `#0000FF` | `#12100E` | 버튼·링크·본문 텍스트 |
+| `palette.secondary.main` | blueGrey[900] `#263238` | `#FFC66E` | 악센트, 발광 표현 |
+| `palette.background.default` / `.paper` | 미지정 (MUI 흰색) | `#E8E5E1` 둘 다 동일 | 페이지와 Paper |
+| `palette.grey.*` | 미지정 (MUI 쿨 그레이) | `#FAF9F7`(50) ~ `#12100E`(900) | 보조 텍스트, 경계 |
+| `palette.text.*` | 미지정 | primary `#12100E`, 보조 80%, 비활성 38% | 본문 위계 |
+| `palette.divider` | 미지정 | `#12100E` 12% | 섹션 선, 그리드 선 |
+| `palette.brand.*` | 없음 | wallTintWhite, warmWhite, warmBlack, accent | 4색 의미 토큰 (신설) |
+| `palette.timeline.*` | 없음 | noon, afternoon, evening, midnight | 시간 블렌딩 배경 (신설) |
+| `typography.fontFamily` | Pretendard Variable | Pretendard Variable (유지) | 본문·라벨 |
+| `typography.h1~h6.fontFamily` | Outfit + Pretendard 최고 웨이트 | Tiempos Headline 계열 세리프 | 디스플레이 전체 |
+| `typography.h1` 웨이트·크기·자간 | 900, 크기·자간 미지정 | 800, 6rem, -0.04em, 행간 1.05 | 히어로 헤드라인 |
+| `typography.body1` | 미지정 (MUI 1rem) | 1.25rem, 행간 1.7 | 본문 |
+| `typography.overline` | 미지정 | 자간 0.1em, 대문자 | 에디토리얼 캡션 라벨 |
+| `typography.button.textTransform` | 미지정 (MUI uppercase) | `none` | 모든 버튼 |
+| `shape.borderRadius` | `0` | `0` (유지) | 전 컴포넌트 |
+| `shadows` | offset 0, blur 높인 dimmed | offset 0, blur 12~58px, 투명도 0.04~0.27 | Paper, 카드 |
+| `spacing` | 미지정 (MUI 8) | `8` (유지) | 전역 |
+| `breakpoints.values.xl` | 미지정 (MUI 1536) | `1440` | 대형 화면 폭 상한 |
+| `transitions.duration.slow/slower/slowest` | 없음 | 600 / 900 / 1200 | 느린 전환 3종 (신설) |
+| `transitions.easing.smooth` | 없음 | `cubic-bezier(0.37, 0, 0.63, 1)` | 위 세 전환 (신설) |
+| `components.MuiInput` / `MuiSelect` | 미지정 (MUI outlined) | standard 언더라인 1px, 3단계 상태색 | 모든 폼 |
+| `components.MuiButton` | 미지정 | borderRadius 0, 자연 케이스 | 버튼 |
+| `components.MuiPaper` / `MuiCard` / `MuiChip` | 미지정 | borderRadius 0, Paper 배경 transparent | 기본 컴포넌트 |
+
+비고: 입력 언더라인은 200ms 색 전환과 아이콘 180도 회전을 포함한다. 느린 전환 3종은 낮·밤 블렌딩, 섹션 진입, 공유 요소 전환이다.
+
+---
+
+## 6. 다음 문서로 넘기는 것
+
+| 받는 곳 | 가져가는 것 |
+|---|---|
+| theme.js 수정 | 5절 표 |
+| /component-work | 3절 토큰 방향, 5절 표 |
+| /layout-composer | 2절 두 표의 아키타입·콘텐츠 신호 |
+| /visual-asset-prompt | 4절 개요 표와 에셋별 방향, 4.1절 |
