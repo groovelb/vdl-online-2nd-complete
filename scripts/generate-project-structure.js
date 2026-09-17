@@ -1,11 +1,12 @@
 /**
  * generate-project-structure.js
  *
- * src/stories/page/ 의 페이지 진입점을 루트로 삼아
- * src/components/**  내부의 import 관계를 재귀 탐색하고
- * src/data/**  (정적 데이터) 및 주요 Context(useCart / useTimeline /
- * useSharedTransition) 사용 여부를 수집하여
+ * src/App.jsx 를 루트로 삼아 src/** (stories·data·styles·assets 제외,
+ * stories/page 는 포함) 의 import 관계를 재귀 탐색하고
+ * src/data/** (정적 데이터) 와 훅(useXxx) 사용 여부를 수집하여
  * src/data/projectStructure.js 를 생성한다.
+ * components/ 외에 pages/, sections/, common/, hooks/ 처럼 프로젝트마다
+ * 다른 폴더 구조를 그대로 따라간다.
  *
  * 사용: pnpm generate-structure
  */
@@ -15,7 +16,6 @@ import { join, relative, dirname, basename, extname, resolve } from 'node:path';
 
 const ROOT = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
 const SRC = join(ROOT, 'src');
-const COMPONENTS_DIR = join(SRC, 'components');
 const PAGE_DIR = join(SRC, 'stories', 'page');
 const DATA_DIR = join(SRC, 'data');
 const APP_FILE = join(SRC, 'App.jsx');
@@ -110,7 +110,7 @@ function registerFile(file) {
   const specs = extractImportSpecifiers(source);
 
   let kind = 'component';
-  if (rel.startsWith('stories/page/')) kind = 'page';
+  if (rel.startsWith('stories/page/') || rel.startsWith('pages/')) kind = 'page';
   else if (/\/use[A-Z]/.test(file)) kind = 'hook';
 
   const storyTitle = extractStoryTitle(storyFileFor(file));
@@ -127,11 +127,21 @@ function registerFile(file) {
   });
 }
 
+/** src/ 아래에서 구조 탐색 대상이 아닌 폴더 (스토리북 문서·정적 데이터·스타일·에셋) */
+const SKIP_DIRS = ['stories', 'data', 'styles', 'assets'];
+const PAGE_REL = relative(SRC, PAGE_DIR) + '/';
+
+function isTraversable(file) {
+  const rel = relative(SRC, file);
+  if (rel.startsWith(PAGE_REL)) return true;
+  return !SKIP_DIRS.some((d) => rel === d || rel.startsWith(d + '/'));
+}
+
+const allSources = walk(SRC).filter(isTraversable);
 const componentSourceFiles = [
   APP_FILE,
-  ...walk(COMPONENTS_DIR).filter(isComponentSourceFile),
-  ...walk(COMPONENTS_DIR).filter(isHookSourceFile),
-  ...walk(PAGE_DIR).filter(isComponentSourceFile),
+  ...allSources.filter(isComponentSourceFile),
+  ...allSources.filter(isHookSourceFile),
 ];
 
 for (const f of componentSourceFiles) registerFile(f);
@@ -140,8 +150,9 @@ for (const f of componentSourceFiles) registerFile(f);
 
 /**
  * import 를 아래 타입으로 분류:
- *  - component  : src/components/ or src/stories/page/ 의 컴포넌트 (.jsx)
- *  - hook       : src/components/** / useXxx.(js|jsx)
+ *  - component  : 탐색 대상 폴더의 컴포넌트 (.jsx)
+ *  - page       : src/stories/page/ 또는 src/pages/ 의 페이지 (.jsx)
+ *  - hook       : useXxx.(js|jsx)
  *  - data       : src/data/ 의 정적 데이터
  *  - ignore     : 그 외 (MUI / 외부 라이브러리 / 유틸 / 스타일 / 에셋)
  */
@@ -151,11 +162,8 @@ function classifyResolvedImport(resolved) {
     const name = basename(resolved, extname(resolved));
     return { type: 'data', file: resolved, name };
   }
-  if (resolved.startsWith(COMPONENTS_DIR) || resolved.startsWith(PAGE_DIR)) {
-    const info = fileInfo.get(resolved);
-    if (!info) return { type: 'ignore' };
-    return { type: info.kind, file: resolved };
-  }
+  const info = fileInfo.get(resolved);
+  if (info) return { type: info.kind, file: resolved };
   return { type: 'ignore' };
 }
 

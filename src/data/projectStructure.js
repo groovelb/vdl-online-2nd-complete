@@ -4,7 +4,7 @@
  * 수동 편집 금지. 재생성: pnpm generate-structure
  */
 export default {
-  "generatedAt": "2026-04-17T08:02:35.039Z",
+  "generatedAt": "2026-09-17T06:45:38.858Z",
   "root": {
     "name": "App",
     "kind": "component",
@@ -22,7 +22,12 @@ export default {
         "storyId": null,
         "children": [],
         "hooks": [],
-        "data": []
+        "data": [
+          {
+            "name": "products",
+            "file": "data/products.js"
+          }
+        ]
       },
       {
         "name": "SharedTransitionContext",
@@ -100,7 +105,12 @@ export default {
                 "storyId": null,
                 "children": [],
                 "hooks": [],
-                "data": []
+                "data": [
+                  {
+                    "name": "products",
+                    "file": "data/products.js"
+                  }
+                ]
               }
             ],
             "hooks": [],
@@ -434,8 +444,8 @@ export default {
                         "kind": "component",
                         "category": "components/product",
                         "file": "components/product/ProductCard.jsx",
-                        "storyTitle": null,
-                        "storyId": null,
+                        "storyTitle": "Custom Component/product/ProductCard",
+                        "storyId": "custom-component-product-productcard",
                         "children": [
                           {
                             "name": "CustomCard",
@@ -588,7 +598,12 @@ export default {
                 "storyId": null,
                 "children": [],
                 "hooks": [],
-                "data": []
+                "data": [
+                  {
+                    "name": "products",
+                    "file": "data/products.js"
+                  }
+                ]
               }
             ],
             "hooks": [],
@@ -827,7 +842,12 @@ export default {
                         "storyId": null,
                         "children": [],
                         "hooks": [],
-                        "data": []
+                        "data": [
+                          {
+                            "name": "products",
+                            "file": "data/products.js"
+                          }
+                        ]
                       }
                     ],
                     "hooks": [],
@@ -933,7 +953,12 @@ export default {
                     "storyId": null,
                     "children": [],
                     "hooks": [],
-                    "data": []
+                    "data": [
+                      {
+                        "name": "products",
+                        "file": "data/products.js"
+                      }
+                    ]
                   }
                 ],
                 "hooks": [],
