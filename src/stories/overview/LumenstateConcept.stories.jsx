@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
+import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
@@ -14,6 +15,8 @@ import {
   SectionTitle,
 } from '../../components/storybookDocumentation';
 import { products } from '../../data/products';
+import defaultTheme from '../../styles/themes/default.js';
+import promptTemplateRaw from '../../../docs/lumenstate/image-generation/prompt-template.md?raw';
 
 export default {
   title: 'Overview/Lumenstate/08 Concept & Flow',
@@ -40,6 +43,165 @@ const CONCEPT = {
     note: '그 요소들을 심화 리서치해 디자인 토큰과 제품 사진 프롬프트의 공통 조건으로 정리하고 AI에 학습시킨 결과',
   },
 };
+
+/** theme 토큰 값. 손으로 적지 않고 theme 객체에서 읽는다 (src/styles/themes/default.js) */
+const PAL = defaultTheme.palette;
+const TOKENS = {
+  wall: { path: 'palette.background.default', value: PAL.background.default },
+  black: { path: 'palette.primary.main', value: PAL.primary.main },
+  accent: { path: 'palette.secondary.main (brand.accent)', value: PAL.secondary.main },
+  noon: { path: 'palette.timeline.noon', value: PAL.timeline.noon },
+  midnight: { path: 'palette.timeline.midnight', value: PAL.timeline.midnight },
+  radius: { path: 'shape.borderRadius', value: String(defaultTheme.shape.borderRadius) },
+  slow: { path: 'transitions.duration.slow', value: `${ defaultTheme.transitions.duration.slow }ms` },
+};
+
+/**
+ * 결정 스레드. 한 줄이 하나의 사고 흐름이다: 기획·UX(01·02)가 정한 것 → 비주얼 디렉션(03)이 번역한 값 →
+ * 같은 값이 theme 토큰이 된 자리 → 같은 값이 프롬프트 문장이 된 자리. 인용은 문서 원문 그대로.
+ */
+const DECISION_THREADS = [
+  {
+    thread: '하루의 시간',
+    planning: '01 1절 "하루의 시간과 공간 속에 놓인 빛의 상태". 01 4.2 TimeOfDay "모든 장면이 공유하는 낮·밤 사이 시각"',
+    visual: '03 1절 "어떤 장면도 낮 전용이거나 밤 전용이 아니다, 두 상태가 같은 팔레트 안에 있다". 3.1 시간대 배경 Noon~Midnight',
+    tokens: ['noon', 'midnight'],
+    prompt: 'Day "Background: clean, uniform warm off-white (#E8E5E1)". Night "Background: uniform deep warm black, exactly #12100E"',
+  },
+  {
+    thread: '3800K 색온도',
+    planning: '01 3.1 Continuity "아침의 선명함에서 저녁의 온기로"',
+    visual: '03 1절 "3800K의 따뜻한 뉴트럴을 쓴다". 3.1 3800K Amber, 근거 "색온도의 번역". 4절 Night LOOK "발광색 3800K #FFC66E"',
+    tokens: ['accent'],
+    prompt: 'Night "Emission color: exactly 3800K color temperature, hex #FFC66E. Soft amber-white. NOT orange, NOT yellow, NOT pure white"',
+  },
+  {
+    thread: '발광의 밝기 분포',
+    planning: '01 4.2 Product "형태와 낮·밤 이미지 쌍". 밝기 수치는 기획 문서에 없던 여백',
+    visual: '03 4절 Night LOOK "디퓨저 중심 100% 가장자리 80%, 주변 반사 20~30%". common-style 6절에서 수치로 굳음',
+    tokens: [],
+    tokenNote: '토큰 없음. 사진에만 쓰는 수치',
+    prompt: 'Night "Diffuser center brightness: 100%", "Diffuser edge brightness: 80%", "Wall/surface ambient reflection: 20-30%"',
+  },
+  {
+    thread: '형태와 재질',
+    planning: '01 3.1 Immanence "건축과 하나가 되어 조용히 머무는 빛". 3.2 태도 "절제 · 건축적"',
+    visual: '03 3.3 radius "전부 각지게". 1절 하지 않는 것 "그라디언트와 글로우 · 둥근 모서리". 4절 Day SUBJECT "무광 검정 알루미늄 프레임과 화이트 프로스티드 글라스"',
+    tokens: ['radius', 'black'],
+    prompt: 'Day "Extreme geometric precision in the tradition of Bauhaus", "Material: matte black anodized aluminum frame with white frosted glass diffuser"',
+  },
+  {
+    thread: '구도와 여백',
+    planning: '01 3.3 시각 언어 "절제된 미니멀, 건축적". 커뮤니케이션 "에디토리얼, 건축 저널 톤"',
+    visual: '03 4절 Day FORMAT "3:4, 정중앙 정면, 제품이 프레임의 40~60%, 사방 15% 이상 여백"',
+    tokens: [],
+    tokenNote: '토큰 없음. 카드 비율 3:4 는 컴포넌트가 쥠',
+    prompt: 'Day "Composition: perfectly centered in frame", "fills approximately {fillRatio}% of the image area", "Minimum 15% clear padding". Padding Boundary Rule',
+  },
+  {
+    thread: '제품 정보가 슬롯으로',
+    planning: '02 3.1 Product 속성 "이름, 유형, 설치 방식, 낮·밤 이미지 쌍", 영속성 "정적" (products.js)',
+    visual: '03 4절 Day 하지 않는 것 "대각선·3/4 뷰, 원근 왜곡". Camera Angle Rule: mounting 마다 시점이 다름',
+    tokens: [],
+    tokenNote: '토큰 없음. products.js 의 mounting · form · lightPattern 필드',
+    prompt: 'Day "{form}", "{form_detail}", "Camera: {camera}". Night "Light behavior: {light_pattern_detail}"',
+  },
+  {
+    thread: '낮에서 밤을 만든다',
+    planning: '01 4.2 Product "낮·밤 이미지 쌍". 01 4.2 TimeOfDay "모든 장면이 공유하는"',
+    visual: '03 4절 Night FORMAT "Day 컷과 같은 형태·구도·크기. Day 이미지를 레퍼런스로 변환한다". 3.3 전환 템포 slow 600 "낮·밤 블렌딩"',
+    tokens: ['slow'],
+    prompt: 'Night "Transform this product lighting fixture image into a night/dark mode version. Keep the EXACT same product shape, angle, composition, position, and size"',
+  },
+  {
+    thread: '무드 컷',
+    planning: '01 4.2 BrandContent "브랜드 선언, 가치 문구, 무드 이미지". 3.3 "에디토리얼, 건축 저널 톤"',
+    visual: '03 4절 브랜드 무드 Hero FORMAT "3:2, 인물과 조명은 우측 중앙에서 하단, 좌상단은 타이틀이 얹히므로 완전히 빈 벽"',
+    tokens: ['wall'],
+    prompt: 'Brand Moodboard Template "at least 40% of the frame is empty wall/floor/ceiling", MOOD_NEGATIVE (generate-product-images.mjs)',
+  },
+];
+
+/**
+ * 프롬프트 줄마다 붙일 출처. test 가 맞는 첫 규칙을 쓴다. token 은 TOKENS 의 키.
+ * 프롬프트 본문은 prompt-template.md 원문에서 꺼내므로 여기에는 출처만 있다.
+ */
+const DAY_NOTES = [
+  { test: /^A minimalist \{form\}/, from: '02 3.1 Product 유형·형태 → product-specs.md form 슬롯. 03 1절 Warm Minimal' },
+  { test: /^\{form_detail\}/, from: 'product-specs.md 제품별 form_detail' },
+  { test: /^Material:/, from: '03 4절 Day SUBJECT 무광 검정 알루미늄 + 프로스티드 글라스', token: 'black' },
+  { test: /^The light is OFF/, from: '01 4.2 낮·밤 쌍의 낮 상태. 03 4절 Day SUBJECT "조명은 꺼진 상태"' },
+  { test: /^Background:/, from: '03 3.1 Wall Tint White (배경·지면)', token: 'wall' },
+  { test: /^Lighting:/, from: '03 4절 Day LOOK "좌상단 소프트박스 확산광, 제품 아래 약한 접지 그림자". 3.3 elevation 방향성 없는 확산광' },
+  { test: /^Composition:/, from: '03 4절 Day FORMAT 40~60%, 사방 15% 여백. Padding Boundary Rule' },
+  { test: /^Camera:/, from: '02 3.1 설치 방식(mounting) → Camera Angle Rule' },
+  { test: /^Style:/, from: '03 1절 무드 Editorial · Architectural. 4절 Day LOOK photorealistic product photography' },
+  { test: /^No environment/, from: '03 1절 하지 않는 것. 4절 Day 하지 않는 것 "대각선·3/4 뷰, 보케, 렌즈 플레어"' },
+];
+const NIGHT_NOTES = [
+  { test: /^Transform this/, from: '03 4절 Night FORMAT "Day 이미지를 레퍼런스로 변환한다". 01 4.2 낮·밤 쌍' },
+  { test: /^CRITICAL/, from: '03 1절 "두 상태가 같은 팔레트 안에 있다"' },
+  { test: /^- Background: uniform deep warm black/, from: '03 3.1 Warm Black, 시간대 배경 Midnight', token: 'midnight' },
+  { test: /^- Emission color/, from: '03 1절 3800K. 3.1 3800K Amber "색온도의 번역"', token: 'accent' },
+  { test: /^- Diffuser center/, from: '03 4절 Night LOOK. common-style 6절 발광 강도' },
+  { test: /^- Diffuser edge/, from: 'common-style 6절 가장자리 80%' },
+  { test: /ambient reflection/, from: 'common-style 6절 반사 20~30%. 기획 문서에 없던 여백을 결과를 보며 굳힌 수치' },
+  { test: /^- Shadow: none/, from: '03 4절 Night 하지 않는 것 "외부 조명, 그림자"' },
+  { test: /^- Background: change to/, from: '03 3.1 Warm Black', token: 'black' },
+  { test: /^- Light state/, from: '03 4절 Night LOOK "제품 자체가 유일한 광원", 발광색 3800K', token: 'accent' },
+  { test: /^- Light behavior/, from: 'products.js lightPattern → product-specs.md light_pattern_detail 슬롯' },
+  { test: /ONLY light source/, from: '03 4절 Night LOOK "제품 자체가 유일한 광원"' },
+  { test: /^- Nearby surfaces/, from: 'common-style 6절 주변 반사' },
+  { test: /^- Matte black aluminum frame remains dark/, from: '03 3.1 Warm Black. 4절 Day SUBJECT 재질을 밤에도 유지' },
+  { test: /^Keep unchanged/, from: '03 4절 Night FORMAT "같은 형태·구도·크기". Padding Boundary Rule' },
+  { test: /^No text/, from: '03 4절 Night 하지 않는 것 "배경 그라디언트, 외부 조명"' },
+];
+
+/**
+ * prompt-template.md 원문에서 헤딩 아래 첫 코드 블록의 줄들을 꺼낸다. 문서를 복사하지 않고 raw import 를 자른다.
+ *
+ * @param {string} raw - prompt-template.md 원문
+ * @param {string} heading - 찾을 헤딩 (예: '## Day Mode Template')
+ * @returns {string[]} 코드 블록의 비어 있지 않은 줄
+ */
+function extractBlock(raw, heading) {
+  const start = raw.indexOf(heading);
+  if (start < 0) return [];
+  const open = raw.indexOf('```', start);
+  const close = raw.indexOf('```', open + 3);
+  if (open < 0 || close < 0) return [];
+  return raw.slice(open + 3, close).split('\n').map((line) => line.trim()).filter(Boolean);
+}
+
+const DAY_LINES = extractBlock(promptTemplateRaw, '## Day Mode Template');
+const NIGHT_LINES = extractBlock(promptTemplateRaw, '## Night Mode Template');
+
+/**
+ * 프롬프트 한 줄과 그 줄의 출처. 줄은 문서 원문이고 출처만 이 페이지가 붙인다.
+ *
+ * Props:
+ * @param {string} line - 프롬프트 줄 원문 [Required]
+ * @param {Array<{ test: RegExp, from: string, token?: string }>} notes - 출처 규칙 [Required]
+ */
+function AnnotatedLine({ line, notes }) {
+  const note = notes.find((rule) => rule.test.test(line));
+  const token = note && note.token ? TOKENS[note.token] : null;
+  return (
+    <Box sx={ { py: 0.75, borderBottom: 1, borderColor: 'divider' } }>
+      <Typography variant="caption" component="div" sx={ { fontFamily: 'monospace', whiteSpace: 'pre-wrap' } }>
+        { line }
+      </Typography>
+      { note && (
+        <Stack direction="row" spacing={ 1 } alignItems="center" sx={ { mt: 0.5, flexWrap: 'wrap' } }>
+          <Typography variant="caption" color="text.secondary">← { note.from }</Typography>
+          { token && (
+            <Chip size="small" variant="outlined" label={ `${ token.path } = ${ token.value }` } sx={ { fontFamily: 'monospace' } } />
+          ) }
+        </Stack>
+      ) }
+    </Box>
+  );
+}
 
 /** 흐름 표. story 는 스토리 링크(01~03은 MDX docs 페이지의 --docs id) */
 const FLOW_ROWS = [
@@ -307,6 +469,97 @@ export const Default = {
             </TableBody>
           </Table>
         </TableContainer>
+
+        <SectionTitle
+          title="사고의 흐름: 같은 결정이 토큰과 프롬프트가 된다"
+          description="Prompt is new design token 의 뜻. 기획·UX(01·02)가 정한 것을 비주얼 디렉션(03)이 값으로 번역하고, 그 값이 theme 토큰과 프롬프트 문장에 동시에 들어간다. 인용은 문서 원문, 토큰 값은 theme 에서 읽는다."
+        />
+        <TableContainer sx={ { mb: 2 } }>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell>스레드</TableCell>
+                <TableCell>기획 · UX 가 정한 것</TableCell>
+                <TableCell>비주얼 디렉션이 번역한 값</TableCell>
+                <TableCell>theme 토큰</TableCell>
+                <TableCell>프롬프트 문장</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              { DECISION_THREADS.map((row) => (
+                <TableRow key={ row.thread }>
+                  <TableCell sx={ { whiteSpace: 'nowrap', fontWeight: 600 } }>{ row.thread }</TableCell>
+                  <TableCell>{ row.planning }</TableCell>
+                  <TableCell>{ row.visual }</TableCell>
+                  <TableCell>
+                    { row.tokens.length === 0 && (
+                      <Typography variant="caption" color="text.secondary">{ row.tokenNote }</Typography>
+                    ) }
+                    <Stack spacing={ 0.5 }>
+                      { row.tokens.map((key) => (
+                        <Typography key={ key } variant="caption" sx={ { fontFamily: 'monospace' } }>
+                          { TOKENS[key].path } = { TOKENS[key].value }
+                        </Typography>
+                      )) }
+                    </Stack>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="caption" sx={ { fontFamily: 'monospace' } }>{ row.prompt }</Typography>
+                  </TableCell>
+                </TableRow>
+              )) }
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
+          읽는 법: 왼쪽에서 오른쪽으로 갈수록 같은 결정이 더 구체적인 값이 된다. 토큰이 없는 행은 화면에는 쓰이지 않고 사진에만 쓰이는 값이다.
+          그래서 "프롬프트가 곧 디자인 토큰"이다. 화면의 색과 사진의 빛이 한 문서에서 나온 같은 숫자를 쓴다.
+        </Typography>
+
+        <SectionTitle
+          title="주석 달린 프롬프트: 줄마다 어느 결정에서 왔나"
+          description="prompt-template.md 의 Day · Night 템플릿 원문(raw import)을 줄 단위로 나누고, 각 줄에 출처 문서 절과 토큰을 붙였다"
+        />
+        <Grid container spacing={ 3 } sx={ { mb: 2 } }>
+          <Grid size={ { xs: 12, md: 6 } }>
+            <Stack direction="row" spacing={ 2 } alignItems="flex-start" sx={ { mb: 1.5 } }>
+              <Box
+                component="img"
+                src={ products[0].images[0] }
+                alt={ `${ products[0].title } Day` }
+                sx={ { width: 96, aspectRatio: '3 / 4', objectFit: 'cover', bgcolor: 'background.default' } }
+              />
+              <Box>
+                <Typography variant="subtitle2">Day 템플릿 (텍스트 → 이미지)</Typography>
+                <Typography variant="caption" color="text.secondary">
+                  { products[0].title }. 낮 컷은 텍스트만으로 만든다. { DAY_LINES.length }줄 중 출처가 붙은 줄은 규칙에 맞는 줄이다.
+                </Typography>
+              </Box>
+            </Stack>
+            { DAY_LINES.map((line) => <AnnotatedLine key={ line } line={ line } notes={ DAY_NOTES } />) }
+          </Grid>
+          <Grid size={ { xs: 12, md: 6 } }>
+            <Stack direction="row" spacing={ 2 } alignItems="flex-start" sx={ { mb: 1.5 } }>
+              <Box
+                component="img"
+                src={ products[0].images[1] }
+                alt={ `${ products[0].title } Night` }
+                sx={ { width: 96, aspectRatio: '3 / 4', objectFit: 'cover', bgcolor: 'primary.main' } }
+              />
+              <Box>
+                <Typography variant="subtitle2">Night 템플릿 (Day 이미지 → 변환)</Typography>
+                <Typography variant="caption" color="text.secondary">
+                  같은 제품. 밤 컷은 낮 컷을 레퍼런스로 첨부해 변환한다. { NIGHT_LINES.length }줄.
+                </Typography>
+              </Box>
+            </Stack>
+            { NIGHT_LINES.map((line) => <AnnotatedLine key={ line } line={ line } notes={ NIGHT_NOTES } />) }
+          </Grid>
+        </Grid>
+        <Typography variant="body2" color="text.secondary" sx={ { mb: 4 } }>
+          줄의 본문은 문서에서 그대로 잘라 왔고 출처 표기만 이 페이지가 붙였다. 전문과 예시 4건, 무드보드 템플릿은
+          { ' ' }<StoryLink id="overview-lumenstate-appendix-prompt-template--docs">Appendix / Prompt Template</StoryLink>에 있다.
+        </Typography>
 
         <SectionTitle title="컨셉 증거" />
         <TableContainer sx={ { mb: 2 } }>
