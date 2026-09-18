@@ -75,7 +75,7 @@ const FLOW_ROWS = [
   },
 ];
 
-/** 증거 표. status 는 '있음' | '파생' | '없음'. */
+/** 증거 표. status 는 '있음' | '파생' | '없음'. story 는 원문을 보여 주는 Appendix docs id (있을 때만). */
 const EVIDENCE_ROWS = [
   {
     id: 'E1',
@@ -89,6 +89,7 @@ const EVIDENCE_ROWS = [
     item: '프롬프트 템플릿(슬롯 구조, Day/Night 예시, 네거티브)',
     source: 'docs/lumenstate/image-generation/prompt-template.md',
     status: '있음',
+    story: 'overview-lumenstate-appendix-prompt-template--docs',
     note: 'Day/Night 템플릿, Camera Angle Rule, Padding Boundary Rule',
   },
   {
@@ -96,6 +97,7 @@ const EVIDENCE_ROWS = [
     item: '공통 스타일 규칙(배경, 조명, 색온도, 카메라, 패딩 수치)',
     source: 'docs/lumenstate/image-generation/common-style.md',
     status: '있음',
+    story: 'overview-lumenstate-appendix-common-style--docs',
     note: '',
   },
   {
@@ -103,6 +105,7 @@ const EVIDENCE_ROWS = [
     item: '제품별 스펙이 프롬프트 슬롯으로',
     source: 'docs/lumenstate/image-generation/product-specs.md, src/data/products.js',
     status: '있음',
+    story: 'overview-lumenstate-appendix-product-specs--docs',
     note: `제품 20종. type·mounting·form·fillRatio가 {form}·{camera}·{fillRatio} 슬롯에 대응`,
   },
   {
@@ -131,6 +134,7 @@ const EVIDENCE_ROWS = [
     item: '무드보드·브랜드 컷 프롬프트(제품 컷과 구분)',
     source: 'image-generation/prompt-template.md, common-style.md 10절, src/assets/brand-mood (14장)',
     status: '있음',
+    story: 'overview-lumenstate-appendix-prompt-template--docs',
     note: '',
   },
 ];
@@ -191,7 +195,6 @@ const TOKEN_ROWS = [
 /** 없는 것 */
 const MISSING_ITEMS = [
   '03 4.1절 레퍼런스: 사용자가 제공한 레퍼런스 이미지가 원문에 없다(문서 자체가 "해당 없음"으로 명시).',
-  '스토리북 노출: image-generation 문서 3종(common-style, prompt-template, product-specs)은 01~07 Overview 어디에도 직접 노출되지 않는다. 이 페이지가 처음으로 노출한다.',
 ];
 
 /** 슬라이드 사고 지도 대응(VDL thinking/lumenstate.js nodes 중 C-3과 닿는 A·B·C) */
@@ -328,7 +331,15 @@ export const Default = {
                   <TableCell>
                     <Chip label={ row.status } size="small" color={ STATUS_COLOR[row.status] } />
                   </TableCell>
-                  <TableCell>{ row.note }</TableCell>
+                  <TableCell>
+                    { row.note }
+                    { row.story && (
+                      <>
+                        { row.note ? ' ' : '' }
+                        <StoryLink id={ row.story }>원문 보기</StoryLink>
+                      </>
+                    ) }
+                  </TableCell>
                 </TableRow>
               )) }
             </TableBody>
@@ -391,6 +402,12 @@ export const Default = {
           </Table>
         </TableContainer>
 
+        <Typography variant="body2" sx={ { mb: 3 } }>
+          템플릿 전문은 <StoryLink id="overview-lumenstate-appendix-prompt-template--docs">Appendix / Prompt Template</StoryLink>,
+          공통 규칙은 <StoryLink id="overview-lumenstate-appendix-common-style--docs">Appendix / Common Style</StoryLink>,
+          제품별 슬롯 값은 <StoryLink id="overview-lumenstate-appendix-product-specs--docs">Appendix / Product Specs</StoryLink>에서
+          문서 원문 그대로 볼 수 있다.
+        </Typography>
         <SectionTitle
           title="생성 파이프라인"
           description={ `generate-product-images.mjs 903줄. 제품 ${ products.length }종 × Day/Night.` }
