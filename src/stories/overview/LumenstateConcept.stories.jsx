@@ -402,14 +402,6 @@ const KEYWORD_ROWS = [
   },
 ];
 
-/** 프롬프트 템플릿 슬롯 표(prompt-template.md + product-specs.md) */
-const SLOT_ROWS = [
-  { slot: '{form}', origin: 'product-specs.md 제품별 form 필드', example: 'circular ceiling ring' },
-  { slot: '{form_detail}', origin: 'product-specs.md 제품별 form_detail 블록', example: 'Product #1: A circular ring mounted flush to the ceiling...' },
-  { slot: '{fillRatio}', origin: 'product-specs.md 제품별 fillRatio 필드', example: '60 (%)' },
-  { slot: '{camera}', origin: 'prompt-template.md CAMERA_ANGLES, mounting 값으로 분기', example: 'flush-mount → 정바로 아래에서 위를 올려다봄' },
-  { slot: '{light_pattern_detail}', origin: 'product-specs.md 제품별 light_pattern_detail 블록', example: 'Warm amber light radiates downward...' },
-];
 
 /** 파이프라인 표(scripts/generate-product-images.mjs) */
 const PIPELINE_ROWS = [
@@ -418,12 +410,6 @@ const PIPELINE_ROWS = [
   { step: '검증', input: '--dry-run 플래그', output: '프롬프트만 콘솔 출력, API 호출 없음', tool: 'CLI' },
 ];
 
-/** 토큰 대응 표(theme ↔ 프롬프트 규칙) */
-const TOKEN_ROWS = [
-  { token: 'palette.secondary.main (brand.accent)', value: '#FFC66E', rule: 'Night 발광색 hex, 3800K 색온도' },
-  { token: 'palette.background.default / .paper', value: '#E8E5E1 (Wall Tint White)', rule: 'Day 배경색과 동일' },
-  { token: 'palette.primary.main / text.primary', value: '#12100E (Warm Black)', rule: 'Night 배경색과 동일' },
-];
 
 /** 없는 것 */
 const MISSING_ITEMS = [
@@ -679,41 +665,6 @@ export const Default = {
         </TableContainer>
 
         <SectionTitle
-          title="프롬프트 템플릿 슬롯"
-          description="prompt-template.md 슬롯이 product-specs.md 제품별 필드에서 값을 받는다"
-        />
-        <TableContainer sx={ { mb: 2 } }>
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell>슬롯</TableCell>
-                <TableCell>값의 출처</TableCell>
-                <TableCell>예시</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              { SLOT_ROWS.map((row) => (
-                <TableRow key={ row.slot }>
-                  <TableCell>
-                    <Typography variant="caption" sx={ { fontFamily: 'monospace' } }>
-                      { row.slot }
-                    </Typography>
-                  </TableCell>
-                  <TableCell>{ row.origin }</TableCell>
-                  <TableCell>{ row.example }</TableCell>
-                </TableRow>
-              )) }
-            </TableBody>
-          </Table>
-        </TableContainer>
-
-        <Typography variant="body2" sx={ { mb: 3 } }>
-          템플릿 전문은 <StoryLink id="overview-lumenstate-appendix-prompt-template--docs">Appendix / Prompt Template</StoryLink>,
-          공통 규칙은 <StoryLink id="overview-lumenstate-appendix-common-style--docs">Appendix / Common Style</StoryLink>,
-          제품별 슬롯 값은 <StoryLink id="overview-lumenstate-appendix-product-specs--docs">Appendix / Product Specs</StoryLink>에서
-          문서 원문 그대로 볼 수 있다.
-        </Typography>
-        <SectionTitle
           title="생성 파이프라인"
           description={ `generate-product-images.mjs 903줄. 제품 ${ products.length }종 × Day/Night.` }
         />
@@ -734,35 +685,6 @@ export const Default = {
                   <TableCell>{ row.input }</TableCell>
                   <TableCell>{ row.output }</TableCell>
                   <TableCell>{ row.tool }</TableCell>
-                </TableRow>
-              )) }
-            </TableBody>
-          </Table>
-        </TableContainer>
-
-        <SectionTitle
-          title="토큰 ↔ 프롬프트 대응"
-          description="theme.js 값과 image-generation 문서의 색·광 규칙이 같은 값을 공유한다"
-        />
-        <TableContainer sx={ { mb: 4 } }>
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell>theme 토큰</TableCell>
-                <TableCell>값</TableCell>
-                <TableCell>프롬프트 규칙</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              { TOKEN_ROWS.map((row) => (
-                <TableRow key={ row.token }>
-                  <TableCell>
-                    <Typography variant="caption" sx={ { fontFamily: 'monospace' } }>
-                      { row.token }
-                    </Typography>
-                  </TableCell>
-                  <TableCell>{ row.value }</TableCell>
-                  <TableCell>{ row.rule }</TableCell>
                 </TableRow>
               )) }
             </TableBody>
